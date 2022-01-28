@@ -1,0 +1,77 @@
+@AbapCatalog.sqlViewName: 'ZCPMMAINTORDNOTF'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Cube for Maint. Ord/Notf - Analytics'
+
+@Analytics.dataCategory: #CUBE
+@VDM.viewType: #COMPOSITE
+define view ZC_PM_MAINT_ORD_NOTF_ANALYTICS
+  as select from ZI_PM_Maint_Notif_Analytics
+  association [0..1] to ZI_PM_Maint_Order_Analytics as _ZI_PM_Maint_Order_Analytics on $projection.MaintenanceNotification = _ZI_PM_Maint_Order_Analytics.MaintenanceNotification
+  association [0..1] to ZI_PM_Order_Equip_Analytics as _ZI_PM_Order_Equip_Analytics on $projection.Equipment = _ZI_PM_Order_Equip_Analytics.Equipment
+  association [0..1] to I_TechnicalObjectType       as _TechnicalObjectType         on _TechnicalObjectType.TechnicalObjectType = $projection.technicalobjecttype
+
+{
+      /** DIMENSIONS **/
+  key ZI_PM_Maint_Notif_Analytics.MaintenanceNotification,
+      @ObjectModel.foreignKey.association: '_ZI_PM_Order_Equip_Analytics'
+      ZI_PM_Maint_Notif_Analytics.Equipment,
+      @ObjectModel.foreignKey.association: '_TechnicalObjectType'
+      _ZI_PM_Order_Equip_Analytics.TechnicalObjectType,
+
+
+      ZI_PM_Maint_Notif_Analytics.MaintObjectLocAcctAssgmtNmbr,
+      ZI_PM_Maint_Notif_Analytics.MalfunctionStartDate,
+      ZI_PM_Maint_Notif_Analytics.MalfunctionEndDate,
+      ZI_PM_Maint_Notif_Analytics.MalfunctionStartTime,
+      ZI_PM_Maint_Notif_Analytics.MalfunctionEndTime,
+      ZI_PM_Maint_Notif_Analytics.MalfStartDateTime,
+      ZI_PM_Maint_Notif_Analytics.MalfEndDateTime,
+      ZI_PM_Maint_Notif_Analytics.MalfunctionDifference,
+
+      _ZI_PM_Maint_Order_Analytics.MaintenanceOrder,
+      _ZI_PM_Maint_Order_Analytics.NotificationType,
+      _ZI_PM_Maint_Order_Analytics.NotificationText,
+      _ZI_PM_Maint_Order_Analytics.RequiredStartDate,
+      _ZI_PM_Maint_Order_Analytics.RequiredStartTime,
+      _ZI_PM_Maint_Order_Analytics.RequiredEndDate,
+      _ZI_PM_Maint_Order_Analytics.RequiredEndTime,
+      _ZI_PM_Maint_Order_Analytics.ReqStartDateTime,
+      _ZI_PM_Maint_Order_Analytics.ReqEndDateTime,
+      _ZI_PM_Maint_Order_Analytics.ReqDifference,
+
+      _ZI_PM_Maint_Order_Analytics.OrderStatus,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicStartDate,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicStartTime,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicEndDate,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicEndTime,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicStartDateTime,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicEndtDateTime,
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicDifference,
+
+
+      _ZI_PM_Order_Equip_Analytics.EquipmentDescription,
+
+      /** MEASURES TYPE **/
+      --Unit (HH)
+      @Semantics.unitOfMeasure: true
+      ZI_PM_Maint_Notif_Analytics.MaintObjDowntimeDurationUnit,
+
+      /** MEASURES **/
+      @Aggregation.default:#SUM
+      @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+      ZI_PM_Maint_Notif_Analytics.MalfDifferenceInHours,
+      @Aggregation.default:#SUM
+      @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+      _ZI_PM_Maint_Order_Analytics.ReqDifferenceInHours,
+      @Aggregation.default:#SUM
+      @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+      _ZI_PM_Maint_Order_Analytics.MaintOrdBasicDifferenceInHours,
+
+
+      /* Associations */
+      _ZI_PM_Maint_Order_Analytics,
+      _ZI_PM_Order_Equip_Analytics,
+      _TechnicalObjectType
+}

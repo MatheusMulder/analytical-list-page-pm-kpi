@@ -1,0 +1,85 @@
+@AbapCatalog.sqlViewName: 'ZIPMORDERDETAILS'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'CDS View for Order details - Analytics'
+
+@Analytics.dataCategory: #DIMENSION
+@VDM.viewType: #BASIC
+define view ZI_PM_Order_Details_Analytics
+  as select from aufk
+  association [0..1] to afko                      as _afko                      on $projection.OrderNmbr = _afko.aufnr
+  association [0..1] to ZTF_PM_MAINT_ORDER_STATUS as _ZTF_PM_Maint_Order_Status on $projection.OrdObjNmbr = _ZTF_PM_Maint_Order_Status.objnr
+{
+
+  key aufnr                                                                                                                                     as OrderNmbr,
+      objnr                                                                                                                                     as OrdObjNmbr,
+      @Consumption.valueHelpDefinition: [
+      { entity:  { name:    'ZI_PM_STATUS',
+                  element: 'Istat' }
+      }]
+      _ZTF_PM_Maint_Order_Status.stat                                                                                                           as OrdStatus,
+
+      --Maintenance Order Basic Date
+      _afko.gstrp                                                                                                                               as MaintOrdBasicStartDate,
+      _afko.gsuzp                                                                                                                               as MaintOrdBasicStartTime,
+      _afko.gltrp                                                                                                                               as MaintOrdBasicEndDate,
+      _afko.gluzp                                                                                                                               as MaintOrdBasicEndTime,
+
+      CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(_afko.gstrp, 7, 2), '/' ) , CONCAT(substring(_afko.gstrp, 5, 2) , '/')), substring(_afko.gstrp, 1, 4)),
+      CONCAT(CONCAT(Concat(substring(_afko.gsuzp, 1, 2), ':' ) , CONCAT(substring(_afko.gsuzp, 3, 2) , ':')), substring(_afko.gsuzp, 5, 2)), 1) as MaintOrdBasicStartDateTime,
+
+      CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(_afko.gltrp, 7, 2), '/' ) , CONCAT(substring(_afko.gltrp, 5, 2) , '/')), substring(_afko.gltrp, 1, 4)),
+      CONCAT(CONCAT(Concat(substring(_afko.gluzp, 1, 2), ':' ) , CONCAT(substring(_afko.gluzp, 3, 2) , ':')), substring(_afko.gluzp, 5, 2)), 1) as MaintOrdBasicEndtDateTime,
+
+      case
+        when ( _afko.gstrp != '00000000' and _afko.gsuzp != '000000' )  and
+             ( _afko.gltrp != '00000000' and _afko.gluzp != '000000' )
+          then
+           CONCAT(CONCAT(cast(cast(DIV(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ), 3600 ) as abap.int8 ) as abap.char(25)), ':' )          ,
+
+           CONCAT(CONCAT(LPAD(cast(DIV(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0'), ':' ) ,
+
+           LPAD(cast(MOD(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0')))
+        else 'N/A'
+      end                                                                                                                                       as MaintOrdBasicDifference,
+
+
+      case
+        when ( _afko.gstrp != '00000000' and _afko.gsuzp != '000000' )  and
+             ( _afko.gltrp != '00000000' and _afko.gluzp != '000000' )
+           then
+              division(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp,
+                  abap_system_timezone( $session.client,'NULL' ),
+                  $session.client,
+                  'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+                  abap_system_timezone( $session.client,'NULL' ),
+                  $session.client,
+                  'NULL' ), 'FAIL' ), 3600, 2 )
+        else 0.00
+      end                                                                                                                                       as MaintOrdBasicDifferenceInHours,
+
+
+      /* Associations */
+      _afko,
+      _ZTF_PM_Maint_Order_Status
+
+}

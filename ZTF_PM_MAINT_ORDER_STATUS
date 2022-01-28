@@ -1,0 +1,11 @@
+@EndUserText.label: 'Get latest order status'
+@AccessControl.authorizationCheck: #CHECK
+define table function ZTF_PM_MAINT_ORDER_STATUS
+returns {
+  key client : abap.clnt;
+  key  objnr : j_objnr;
+       stat  : j_status;
+       udate : datum;
+       utime : uzeit;
+}
+implemented by method zcl_pm_maint_order_status=>get_latest_status;

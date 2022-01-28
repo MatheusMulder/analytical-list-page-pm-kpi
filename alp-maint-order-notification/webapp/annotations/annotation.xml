@@ -1,0 +1,303 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/sap/ZUI_PM_M_ORD_NOTIF_O2/$metadata">
+        <edmx:Include Namespace="cds_zpm_maint_order_notification"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="sap.pm.custom.fiorielements">
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>                        
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintenanceNotification"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintenanceOrder"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Equipment"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EquipmentName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EquipmentType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="NotificationType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="NotificationText"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ReqDifference"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ReqDifferenceInHours"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfunctionStartDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfunctionStartTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfunctionEndDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfunctionEndTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfStartDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfEndDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfunctionDifference"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MalfDifferenceInHours"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicStartDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicStartTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicEndDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicEndTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicStartDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicEndtDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicDifference"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MaintOrdBasicDifferenceInHours"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Chart">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="Title" String="MaintOrdNotif MaintDif By EquipmentType"/>
+                        <PropertyValue Property="Description" String="MaintOrdNotif MaintDif By EquipmentType"/>
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>EquipmentType</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>MalfDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="MalfDifferenceInHours"/>
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Text" String="Default"/>
+                        <PropertyValue Property="IncludeGrandTotal" Bool="true"/>
+                        <PropertyValue Property="InitialExpansionLevel" Int="NaN"/>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                                <AnnotationPath>@UI.Chart</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="MalfDifferenceInHoursOrdStatus">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="Title" String="MalfDifferenceInHours By OrdStatus"/>
+                        <PropertyValue Property="Description" String="MalfDifferenceInHours By OrdStatus"/>
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Line"/>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>OrdStatus</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>MalfDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="PVMalfunctionDiffInHoursOrdStatus">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#MalfDifferenceInHoursOrdStatus</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="MaintOrdBasicDifferenceInHoursByMaintOrdBasicStartDate">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="Title" String="MaintOrdBasicDifferenceInHours By MaintOrdBasicStartDate"/>
+                        <PropertyValue Property="Description" String="MaintOrdBasicDifferenceInHours By MaintOrdBasicStartDate"/>
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut"/>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>MaintOrdBasicStartDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>MaintOrdBasicDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="PVMaintOrdBasicDifferenceInHoursMaintOrdBasicStartDate">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#MaintOrdBasicDifferenceInHoursByMaintOrdBasicStartDate</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="MalfDifferenceInHoursByNotificationType">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="Title" String="MalfDifferenceInHours By NotificationType"/>
+                        <PropertyValue Property="Description" String="MalfDifferenceInHours By NotificationType"/>
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Bar"/>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>NotificationType</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>MalfDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="PVMalfDifferenceInHoursByNotificationType">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#MalfDifferenceInHoursByNotificationType</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="MaintOrdBasicDifferenceInHoursByEquipmentType">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="Title" String="MaintOrdBasicDifferenceInHours By EquipmentType"/>
+                        <PropertyValue Property="Description" String="MaintOrdBasicDifferenceInHours By EquipmentType"/>
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Bar"/>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>EquipmentType</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>MaintOrdBasicDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="PVMaintOrdBasicDifferenceInHoursByEquipmentType">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#MaintOrdBasicDifferenceInHoursByEquipmentType</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>           
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/OrdStatus">
+                
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="ZI_PM_MAINT_ORDER_NOTIFICATION"/>
+                        <PropertyValue Property="PresentationVariantQualifier" String="PVMalfunctionDiffInHoursOrdStatus"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OrdStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="OrdStatus"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/MaintOrdBasicStartDate">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="ZI_PM_MAINT_ORDER_NOTIFICATION"/>
+                        <PropertyValue Property="PresentationVariantQualifier" String="PVMaintOrdBasicDifferenceInHoursMaintOrdBasicStartDate"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="MaintOrdBasicStartDate"/>
+                                    <PropertyValue Property="ValueListProperty" String="MaintOrdBasicStartDate"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/NotificationType">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="ZI_PM_MAINT_ORDER_NOTIFICATION"/>
+                        <PropertyValue Property="PresentationVariantQualifier" String="PVMalfDifferenceInHoursByNotificationType"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="NotificationType"/>
+                                    <PropertyValue Property="ValueListProperty" String="NotificationType"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/EquipmentType">             
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="ZI_PM_MAINT_ORDER_NOTIFICATION"/>
+                        <PropertyValue Property="PresentationVariantQualifier" String="PVMaintOrdBasicDifferenceInHoursByEquipmentType"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="EquipmentType"/>
+                                    <PropertyValue Property="ValueListProperty" String="EquipmentType"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>               
+            </Annotations>        
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,179 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: { typeName: 'Order and Notification',
+                typeNamePlural: 'Orders and Notifications',
+                title: { type: #STANDARD, label: 'Maint. Order and Notification' } },
+  presentationVariant: [{ sortOrder: [{ by: 'MaintenanceNotification', direction:  #DESC }] }] }
+
+annotate view ZI_PM_MAINT_ORDER_NOTIFICATION with
+{
+
+  @UI.facet: [ 
+    
+  { 
+    id:'MaintenanceNotification',
+    purpose: #STANDARD,
+    type: #IDENTIFICATION_REFERENCE,
+    label: 'General Information',
+    position: 10 
+  } 
+  ]
+
+  @EndUserText.label: 'Maint. Notification'
+  @UI:{ lineItem:       [ { position: 10 } ],
+        identification: [ { position: 10 } ] }
+  MaintenanceNotification;
+
+  @EndUserText.label: 'Maint. Order'
+  @UI: {  lineItem:       [ { position: 20 } ],
+          identification: [ { position: 20 } ] }
+  MaintenanceOrder;
+  
+  @EndUserText.label: 'Equipment'
+  @UI: {   lineItem:       [ { position: 30 } ],
+           identification: [ { position: 30 } ] }
+  Equipment;
+
+  @EndUserText.label: 'Equipment Description'
+  @UI: {   lineItem:       [ { position: 40 } ],
+           identification: [ { position: 40 } ] }
+  EquipmentName;
+
+  @EndUserText.label: 'Equipment Type'
+  @UI: {  lineItem:       [ { position: 50 } ],
+          selectionField: [ { position: 70 }  ] }
+  EquipmentType;
+
+  @EndUserText.label: 'Notific. Type'
+  @UI: {  lineItem:       [ { position: 60 } ],
+          identification: [ { position: 60 } ],
+          selectionField: [ { position: 50 } ] }
+  NotificationType;
+
+  @EndUserText.label: 'Description'
+  @UI: {  lineItem:       [ { position: 70 } ],
+          identification: [ { position: 70 } ] }
+  NotificationText;
+
+  @EndUserText.label: 'Req. Start Date'
+  @UI: {  identification: [ { position: 80 } ],
+          selectionField: [ { position: 10 } ] }
+  RequiredStartDate;
+
+  @EndUserText.label: 'Req. Start Time'
+  @UI: { identification: [ { position: 90 } ] }
+  RequiredStartTime;
+
+  @EndUserText.label: 'Req. End Date'
+  @UI: { identification: [ { position: 100 } ] }
+  RequiredEndDate;
+
+  @EndUserText.label: 'Req. End Time'
+  @UI: { identification: [ { position: 110 } ] }
+  RequiredEndTime;
+
+  @EndUserText.label: 'Req. Start Date/Time'
+  @UI: { identification: [ { position: 120 } ] }
+  ReqStartDateTime;
+
+  @EndUserText.label: 'Req. End Date/Time'
+  @UI: { identification: [ { position: 130 } ] }
+  ReqEndDateTime;
+
+  @EndUserText.label: 'Req. Difference'
+  @UI: {  lineItem:       [ { position: 140 } ],
+          identification: [ { position: 140 } ] }
+  ReqDifference;
+
+  @EndUserText.label: 'Req. Diff. in Hours'
+  @UI: {  lineItem:       [ { position: 150 } ] }
+  ReqDifferenceInHours;
+
+  @EndUserText.label: 'Malf. Start Date'
+  @UI: {  lineItem:       [ { position: 160 } ],
+          identification: [ { position: 160 } ],
+          selectionField: [ { position: 20 }  ] }
+  MalfunctionStartDate;
+
+  @EndUserText.label: 'Malf. Start Time'
+  @UI: {  lineItem:       [ { position: 170 } ],
+          identification: [ { position: 170 } ] }
+  MalfunctionStartTime;
+
+  @EndUserText.label: 'Malf. End Date'
+  @UI: {  lineItem:       [ { position: 180 } ],
+         identification:  [ { position: 180 } ] }
+  MalfunctionEndDate;
+
+  @EndUserText.label: 'Malf. End Time'
+  @UI: {  lineItem:       [ { position: 190 } ],
+         identification:  [ { position: 190 } ] }
+  MalfunctionEndTime;
+
+  @EndUserText.label: 'Malf. Start Date/Time'
+  @UI: {  lineItem:       [ { position: 200 } ],
+          identification: [ { position: 200 } ] }
+  MalfStartDateTime;
+
+  @EndUserText.label: 'Malf. End Date/Time'
+  @UI: {  lineItem:       [ { position: 210 } ],
+          identification: [ { position: 210 } ] }
+  MalfEndDateTime;
+
+  @EndUserText.label: 'Malf. Diff.'
+  @UI: {  lineItem:       [ { position: 220 } ],
+          identification: [ { position: 220 } ] }
+  MalfunctionDifference;
+
+  @EndUserText.label: 'Malf. Diff. in Hours'
+  @UI: {  lineItem:       [ { position: 230 } ] }
+  MalfDifferenceInHours;
+
+  @EndUserText.label: 'Required Start Date'
+  @UI: {  lineItem:       [ { position: 240 } ],
+          identification: [ { position: 240 } ] }
+  MaintOrdBasicStartDate;
+
+  @EndUserText.label: 'Maint. Start Time'
+  @UI: {  lineItem:       [ { position: 250 } ],
+          identification: [ { position: 250 }] }
+  MaintOrdBasicStartTime;
+
+  @EndUserText.label:  'Maint. End Date'
+  @UI: {  lineItem:       [ { position: 260 }  ],
+          identification: [ { position: 260 } ] }
+  MaintOrdBasicEndDate;
+
+  @EndUserText.label:  'Maint. End Time'
+  @UI: {  lineItem:       [ { position: 270 } ],
+          identification: [ { position: 270 } ] }
+  MaintOrdBasicEndTime;
+
+  @EndUserText.label: 'Maint. Start Date/Time'
+  @UI: {  lineItem:       [ { position: 280 } ],
+          identification: [ { position: 280 } ] }
+  MaintOrdBasicStartDateTime;
+
+  @EndUserText.label: 'Maint. End Date/Time'
+  @UI: {  lineItem:       [ { position: 290 } ],
+          identification: [ { position: 290 }  ] }
+  MaintOrdBasicEndtDateTime;
+
+  @EndUserText.label: 'Maint. Diff.'
+  @UI: {  lineItem:       [ { position: 300 } ],
+          identification: [ { position: 280 } ] }
+  MaintOrdBasicDifference;
+
+  @EndUserText.label: 'Maint. Diff in Hours'
+  @UI: {  lineItem:       [ { position: 310 } ] }
+  MaintOrdBasicDifferenceInHours;
+
+  @Consumption.filter.defaultValue: 'I0045'
+  @EndUserText.label: 'Order Status'
+  @UI: {   selectionField: [ { position: 40 }] }
+  OrdStatus;
+
+  @EndUserText.label: 'Required Date Year'
+  @UI: {   selectionField: [ { position: 60 }] }
+  RequiredDateYear;
+}

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="cds_zpm_maint_order_notification" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="I_TechnicalObjectTypeStdVHType" sap:label="Techncial Object Type" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TechnicalObjectType"/>
+                </Key>
+                <Property Name="TechnicalObjectType" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="TechnicalObjectType_Text" sap:label="Object Type" sap:quickinfo="Type of Technical Object"/>
+                <Property Name="TechnicalObjectType_Text" Type="Edm.String" MaxLength="20" sap:label="Object type text" sap:quickinfo="Text for Object Type" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="ZI_PM_MAINT_ORDER_NOTIFICATIONType" sap:semantics="aggregate" sap:label="Maitenance Order and Notification View" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MaintenanceNotification" Type="Edm.String" MaxLength="12" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Maint. Notification" sap:quickinfo="Notification Number"/>
+                <Property Name="MaintenanceOrder" Type="Edm.String" MaxLength="12" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Maint. Order" sap:quickinfo="Order Number"/>
+                <Property Name="OrdObjNmbr" Type="Edm.String" MaxLength="22" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Object number"/>
+                <Property Name="OrdStatus" Type="Edm.String" MaxLength="5" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Order Status" sap:quickinfo="Object status" sap:value-list="standard"/>
+                <Property Name="MaintObjectLocAcctAssgmtNmbr" Type="Edm.String" MaxLength="12" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Loc/Acct Assignment" sap:quickinfo="Location and account assignment for technical object"/>
+                <Property Name="Equipment" Type="Edm.String" MaxLength="18" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Equipment" sap:quickinfo="Equipment Number"/>
+                <Property Name="EquipmentName" Type="Edm.String" MaxLength="40" sap:label="Equipment Description" sap:quickinfo="Description of technical object"/>
+                <Property Name="EquipmentType" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Equipment Type" sap:quickinfo="Type of Technical Object" sap:value-list="standard"/>
+                <Property Name="NotificationType" Type="Edm.String" MaxLength="2" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Notific. Type" sap:quickinfo="Notification Type"/>
+                <Property Name="NotificationText" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:label="Description" sap:quickinfo="Short Text"/>
+                <Property Name="MaintObjDowntimeDurationUnit" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:label="Breakdown durtn unit" sap:quickinfo="Unit for Breakdown Duration" sap:semantics="unit-of-measure"/>
+                <Property Name="RequiredStartDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Req. Start Date" sap:quickinfo="Required start date"/>
+                <Property Name="RequiredStartTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Req. Start Time" sap:quickinfo="Required Start Time"/>
+                <Property Name="RequiredEndDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Req. End Date" sap:quickinfo="Required End Date"/>
+                <Property Name="RequiredEndTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Req. End Time" sap:quickinfo="Requested End Time"/>
+                <Property Name="RequiredDateYear" Type="Edm.String" MaxLength="4" sap:aggregation-role="dimension" sap:label="Required Date Year"/>
+                <Property Name="ReqStartDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Req. Start Date/Time"/>
+                <Property Name="ReqEndDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Req. End Date/Time"/>
+                <Property Name="ReqDifference" Type="Edm.String" MaxLength="31" sap:aggregation-role="dimension" sap:label="Req. Difference"/>
+                <Property Name="ReqDifferenceInHours" Type="Edm.Double" sap:aggregation-role="measure" sap:unit="MaintObjDowntimeDurationUnit" sap:label="Req. Diff. in Hours" sap:filterable="false"/>
+                <Property Name="MalfunctionStartDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Malf. Start Date" sap:quickinfo="Start of Malfunction (Date)"/>
+                <Property Name="MalfunctionEndDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Malf. End Date" sap:quickinfo="End of Malfunction (Date)"/>
+                <Property Name="MalfunctionStartTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Malf. Start Time" sap:quickinfo="Start of Malfunction (Time)"/>
+                <Property Name="MalfunctionEndTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Malf. End Time" sap:quickinfo="End of Malfunction (Time)"/>
+                <Property Name="MalfStartDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Malf. Start Date/Time"/>
+                <Property Name="MalfEndDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Malf. End Date/Time"/>
+                <Property Name="MalfunctionDifference" Type="Edm.String" MaxLength="31" sap:aggregation-role="dimension" sap:label="Malf. Diff."/>
+                <Property Name="MalfDifferenceInHours" Type="Edm.Double" sap:aggregation-role="measure" sap:unit="MaintObjDowntimeDurationUnit" sap:label="Malf. Diff. in Hours" sap:filterable="false"/>
+                <Property Name="MaintOrdBasicStartDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Required Start Date" sap:quickinfo="Basic Start Date"/>
+                <Property Name="MaintOrdBasicStartTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Maint. Start Time" sap:quickinfo="Basic Start (Time)"/>
+                <Property Name="MaintOrdBasicEndDate" Type="Edm.DateTime" Precision="0" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Maint. End Date" sap:quickinfo="Basic finish date"/>
+                <Property Name="MaintOrdBasicEndTime" Type="Edm.Time" Precision="0" sap:aggregation-role="dimension" sap:label="Maint. End Time" sap:quickinfo="Basic Finish (Time)"/>
+                <Property Name="MaintOrdBasicStartDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Maint. Start Date/Time"/>
+                <Property Name="MaintOrdBasicEndtDateTime" Type="Edm.String" MaxLength="19" sap:aggregation-role="dimension" sap:label="Maint. End Date/Time"/>
+                <Property Name="MaintOrdBasicDifference" Type="Edm.String" MaxLength="31" sap:aggregation-role="dimension" sap:label="Maint. Diff."/>
+                <Property Name="MaintOrdBasicDifferenceInHours" Type="Edm.Double" sap:aggregation-role="measure" sap:unit="MaintObjDowntimeDurationUnit" sap:label="Maint. Diff in Hours" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ZI_PM_STATUSType" sap:label="Maint. Ord. Status List(help definition)" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Istat"/>
+                </Key>
+                <Property Name="Istat" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="UpperCase" sap:label="System status"/>
+                <Property Name="TXT04" Type="Edm.String" MaxLength="4" sap:label="Status" sap:quickinfo="Individual status of an object (short form)"/>
+                <Property Name="TXT30" Type="Edm.String" MaxLength="30" sap:label="Status" sap:quickinfo="Object status"/>
+            </EntityType>
+            <EntityContainer Name="cds_zpm_maint_order_notification_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_TechnicalObjectTypeStdVH" EntityType="cds_zpm_maint_order_notification.I_TechnicalObjectTypeStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZI_PM_MAINT_ORDER_NOTIFICATION" EntityType="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZI_PM_STATUS" EntityType="cds_zpm_maint_order_notification.ZI_PM_STATUSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/OrdStatus" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Status"/>
+                        <PropertyValue Property="CollectionPath" String="ZI_PM_STATUS"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OrdStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Istat"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TXT04"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TXT30"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FilterDefaultValue" String="I0045"/>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/EquipmentType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Object Type"/>
+                        <PropertyValue Property="CollectionPath" String="I_TechnicalObjectTypeStdVH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="EquipmentType"/>
+                                    <PropertyValue Property="ValueListProperty" String="TechnicalObjectType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TechnicalObjectType_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.cds_zpm_maint_order_notification_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="None"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.cds_zpm_maint_order_notification_Entities/ZI_PM_MAINT_ORDER_NOTIFICATION" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>ID</PropertyPath>
+                                <PropertyPath>ReqDifferenceInHours</PropertyPath>
+                                <PropertyPath>MalfDifferenceInHours</PropertyPath>
+                                <PropertyPath>MaintOrdBasicDifferenceInHours</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>ID</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/ReqDifferenceInHours" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/MalfDifferenceInHours" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="cds_zpm_maint_order_notification.ZI_PM_MAINT_ORDER_NOTIFICATIONType/MaintOrdBasicDifferenceInHours" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <atom:link rel="self" href="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/sap/ZUI_PM_M_ORD_NOTIF_O2/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://bhsdevapp.bhstrans.hu:443/sap/opu/odata/sap/ZUI_PM_M_ORD_NOTIF_O2/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

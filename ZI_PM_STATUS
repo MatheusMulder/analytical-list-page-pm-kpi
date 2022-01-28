@@ -1,0 +1,15 @@
+@AbapCatalog.sqlViewName: 'ZIPMSTATUS'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Maint. Ord. Status List(help definition)'
+define view ZI_PM_STATUS
+  as select from tj02
+    inner join   tj02t on  tj02t.istat = tj02.istat
+                       and tj02t.spras = $session.system_language
+{
+
+  key tj02.istat  as Istat,
+      tj02t.txt04 as TXT04,
+      tj02t.txt30 as TXT30
+}

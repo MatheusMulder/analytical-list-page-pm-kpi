@@ -1,0 +1,113 @@
+@AbapCatalog.sqlViewName: 'ZCPMQMORDNOTF'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Query for Maint. Ord/Notif - Analytics'
+
+@Analytics.query: true
+@VDM.viewType: #CONSUMPTION
+define view ZC_PM_QM_ORD_NOTF_ANALYTICS
+  as select from ZC_PM_MAINT_ORD_NOTF_ANALYTICS
+{
+
+      /** DIMENSIONS **/
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+  key MaintenanceNotification,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      Equipment,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      TechnicalObjectType,
+
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintObjectLocAcctAssgmtNmbr,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfunctionStartDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfunctionEndDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfunctionStartTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfunctionEndTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfStartDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfEndDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MalfunctionDifference,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintenanceOrder,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      NotificationType,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      NotificationText,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      RequiredStartDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      RequiredStartTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      RequiredEndDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      RequiredEndTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      ReqStartDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      ReqEndDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      ReqDifference,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      OrderStatus,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicStartDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicStartTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicEndDate,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicEndTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicStartDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicEndtDateTime,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      MaintOrdBasicDifference,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+      EquipmentDescription,
+      @AnalyticsDetails.query.display: #KEY_TEXT
+      @AnalyticsDetails.query.axis: #FREE
+
+      /** MEASURES **/
+      MalfDifferenceInHours,
+      ReqDifferenceInHours,
+      MaintOrdBasicDifferenceInHours
+
+}

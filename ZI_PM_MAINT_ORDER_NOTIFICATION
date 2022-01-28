@@ -1,0 +1,220 @@
+@AbapCatalog.sqlViewName: 'ZIPMMAINTORDNOT'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Maitenance Order and Notification View'
+@Metadata.allowExtensions: true
+
+@VDM.viewType: #CONSUMPTION
+define view ZI_PM_MAINT_ORDER_NOTIFICATION
+  as select from           qmih
+    left outer to one join qmel on qmih.qmnum = qmel.qmnum
+    left outer to one join aufk on qmel.aufnr = aufk.aufnr
+  association [0..1] to afko                      as _afko                      on $projection.MaintenanceOrder = _afko.aufnr
+  association [0..1] to I_Equipment               as _Equipment                 on $projection.Equipment = _Equipment.Equipment
+  association [0..1] to ZTF_PM_MAINT_ORDER_STATUS as _ZTF_PM_Maint_Order_Status on $projection.OrdObjNmbr = _ZTF_PM_Maint_Order_Status.objnr
+  association [0..*] to I_EquipmentText           as _EquipmentText             on $projection.Equipment = _EquipmentText.Equipment
+
+{
+  key  qmih.qmnum                                                                                                                                as MaintenanceNotification,
+  key  qmel.aufnr                                                                                                                                as MaintenanceOrder,
+       @UI.hidden: true
+       aufk.objnr                                                                                                                                as OrdObjNmbr,
+       @Consumption.valueHelpDefinition: [
+       { entity:  { name:    'ZI_PM_STATUS',
+                    element: 'Istat' }
+       }]
+       _ZTF_PM_Maint_Order_Status.stat                                                                                                           as OrdStatus,
+       qmih.iloan                                                                                                                                as MaintObjectLocAcctAssgmtNmbr,
+       //       @ObjectModel.text.element: ['EquipmentName']
+       //       @UI.textArrangement: #TEXT_LAST
+       qmih.equnr                                                                                                                                as Equipment,
+       _EquipmentText[1: Language = $session.system_language ].EquipmentName                                                                     as EquipmentName,
+       _Equipment.TechnicalObjectType                                                                                                            as EquipmentType,
+       qmel.qmart                                                                                                                                as NotificationType,
+       qmel.qmtxt                                                                                                                                as NotificationText,
+       --Unit (HH)
+       @Semantics.unitOfMeasure: true
+       qmih.maueh                                                                                                                                as MaintObjDowntimeDurationUnit,
+
+       --Required Date
+       qmel.strmn                                                                                                                                as RequiredStartDate,
+       qmel.strur                                                                                                                                as RequiredStartTime,
+       qmel.ltrmn                                                                                                                                as RequiredEndDate,
+       qmel.ltrur                                                                                                                                as RequiredEndTime,
+       substring(qmel.strmn, 1, 4)                                                                                                               as RequiredDateYear,
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(qmel.strmn, 7, 2), '/' ) , CONCAT(substring(qmel.strmn, 5, 2) , '/')), substring(qmel.strmn, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(qmel.strur, 1, 2), ':' ) , CONCAT(substring(qmel.strur, 3, 2) , ':')), substring(qmel.strur, 5, 2)), 1)    as ReqStartDateTime,
+
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(qmel.ltrmn, 7, 2), '/' ) , CONCAT(substring(qmel.ltrmn, 5, 2) , '/')), substring(qmel.ltrmn, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(qmel.ltrur, 1, 2), ':' ) , CONCAT(substring(qmel.ltrur, 3, 2) , ':')), substring(qmel.ltrur, 5, 2)), 1)    as ReqEndDateTime,
+
+       case
+         when ( qmel.strmn != '00000000' and qmel.strur != '000000' )  and
+              ( qmel.ltrmn != '00000000' and qmel.ltrur != '000000' )
+           then
+            CONCAT(CONCAT(cast(cast(DIV(tstmp_seconds_between( dats_tims_to_tstmp( qmel.strmn, qmel.strur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( qmel.ltrmn, qmel.ltrur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ), 3600 ) as abap.int8 ) as abap.char(25)), ':' )          ,
+
+            CONCAT(CONCAT(LPAD(cast(DIV(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( qmel.strmn, qmel.strur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( qmel.ltrmn, qmel.ltrur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0'), ':' ) ,
+
+            LPAD(cast(MOD(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( qmel.strmn, qmel.strur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( qmel.ltrmn, qmel.ltrur ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0')))
+         else 'N/A'
+       end                                                                                                                                       as ReqDifference,
+
+       @Aggregation.default:#SUM
+       @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+       case
+         when ( qmel.strmn != '00000000' and qmel.strur != '000000' ) and
+              ( qmel.ltrmn != '00000000' and qmel.ltrur != '000000' )
+            then
+               cast(division(tstmp_seconds_between( dats_tims_to_tstmp( qmel.strmn, qmel.strur,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                  'NULL' ),  dats_tims_to_tstmp( qmel.ltrmn, qmel.ltrur ,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                  'NULL' ), 'FAIL' ), 3600, 2) as abap.int8 )
+         else 0.00
+       end                                                                                                                                       as ReqDifferenceInHours,
+
+       --Malfunction Date
+       qmih.ausvn                                                                                                                                as MalfunctionStartDate,
+       qmih.ausbs                                                                                                                                as MalfunctionEndDate,
+       qmih.auztv                                                                                                                                as MalfunctionStartTime,
+       qmih.auztb                                                                                                                                as MalfunctionEndTime,
+
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(qmih.ausvn, 7, 2), '/' ) , CONCAT(substring(qmih.ausvn, 5, 2) , '/')), substring(qmih.ausvn, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(qmih.auztv, 1, 2), ':' ) , CONCAT(substring(qmih.auztv, 3, 2) , ':')), substring(qmih.auztv, 5, 2)), 1)    as MalfStartDateTime,
+
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(qmih.ausbs, 7, 2), '/' ) , CONCAT(substring(qmih.ausbs, 5, 2) , '/')), substring(qmih.ausbs, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(qmih.auztb, 1, 2), ':' ) , CONCAT(substring(qmih.auztb, 3, 2) , ':')), substring(qmih.auztb, 5, 2)), 1)    as MalfEndDateTime,
+
+       case
+          when ( qmih.ausvn != '00000000' and qmih.auztv != '000000' ) and
+               ( qmih.ausbs != '00000000' and qmih.auztb != '000000' )
+             then
+               CONCAT(CONCAT(cast(cast(DIV(tstmp_seconds_between( dats_tims_to_tstmp( qmih.ausvn, qmih.auztv ,
+                abap_system_timezone( $session.client,'NULL' ),
+                $session.client,
+                'NULL' ),  dats_tims_to_tstmp( qmih.ausbs, qmih.auztb ,
+                abap_system_timezone( $session.client,'NULL' ),
+                $session.client,
+                'NULL' ), 'FAIL' ), 3600 ) as abap.int8 ) as abap.char(25)), ':' )          ,
+
+                CONCAT(CONCAT(LPAD(cast(DIV(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( qmih.ausvn, qmih.auztv ,
+                 abap_system_timezone( $session.client,'NULL' ),
+                 $session.client,
+                'NULL' ),  dats_tims_to_tstmp( qmih.ausbs, qmih.auztb ,
+                 abap_system_timezone( $session.client,'NULL' ),
+                 $session.client,
+                'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0'), ':' ) ,
+
+               LPAD(cast(MOD(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( qmih.ausvn, qmih.auztv ,
+                abap_system_timezone( $session.client,'NULL' ),
+                $session.client,
+                'NULL' ),  dats_tims_to_tstmp( qmih.ausbs, qmih.auztb ,
+                abap_system_timezone( $session.client,'NULL' ),
+                $session.client,
+                'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0')))
+          else 'N/A'
+       end
+
+                                                                                                                                                 as MalfunctionDifference,
+       @Aggregation.default:#SUM
+       @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+       case
+         when ( qmih.ausvn != '00000000' and qmih.auztv != '000000' ) and
+              ( qmih.ausbs != '00000000' and qmih.auztb != '000000' )
+            then
+               division(tstmp_seconds_between( dats_tims_to_tstmp( qmih.ausvn, qmih.auztv ,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                  'NULL' ),  dats_tims_to_tstmp( qmih.ausbs, qmih.auztb ,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                  'NULL' ), 'FAIL' ), 3600, 2)
+         else 0.00
+       end                                                                                                                                       as MalfDifferenceInHours,
+
+       --Maintenance Order Basic Date
+       _afko.gstrp                                                                                                                               as MaintOrdBasicStartDate,
+       _afko.gsuzp                                                                                                                               as MaintOrdBasicStartTime,
+       _afko.gltrp                                                                                                                               as MaintOrdBasicEndDate,
+       _afko.gluzp                                                                                                                               as MaintOrdBasicEndTime,
+
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(_afko.gstrp, 7, 2), '/' ) , CONCAT(substring(_afko.gstrp, 5, 2) , '/')), substring(_afko.gstrp, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(_afko.gsuzp, 1, 2), ':' ) , CONCAT(substring(_afko.gsuzp, 3, 2) , ':')), substring(_afko.gsuzp, 5, 2)), 1) as MaintOrdBasicStartDateTime,
+
+       CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(_afko.gltrp, 7, 2), '/' ) , CONCAT(substring(_afko.gltrp, 5, 2) , '/')), substring(_afko.gltrp, 1, 4)),
+       CONCAT(CONCAT(Concat(substring(_afko.gluzp, 1, 2), ':' ) , CONCAT(substring(_afko.gluzp, 3, 2) , ':')), substring(_afko.gluzp, 5, 2)), 1) as MaintOrdBasicEndtDateTime,
+
+       case
+         when ( _afko.gstrp != '00000000' and _afko.gsuzp != '000000' )  and
+              ( _afko.gltrp != '00000000' and _afko.gluzp != '000000' )
+           then
+            CONCAT(CONCAT(cast(cast(DIV(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ), 3600 ) as abap.int8 ) as abap.char(25)), ':' )          ,
+
+            CONCAT(CONCAT(LPAD(cast(DIV(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0'), ':' ) ,
+
+            LPAD(cast(MOD(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+            abap_system_timezone( $session.client,'NULL' ),
+            $session.client,
+            'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0')))
+         else 'N/A'
+       end                                                                                                                                       as MaintOrdBasicDifference,
+
+       @DefaultAggregation: #SUM
+       @Semantics.quantity.unitOfMeasure: 'MaintObjDowntimeDurationUnit'
+       case
+         when ( _afko.gstrp != '00000000' and _afko.gsuzp != '000000' )  and
+              ( _afko.gltrp != '00000000' and _afko.gluzp != '000000' )
+            then
+               division(tstmp_seconds_between( dats_tims_to_tstmp( _afko.gstrp, _afko.gsuzp,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                   'NULL' ),  dats_tims_to_tstmp( _afko.gltrp, _afko.gluzp ,
+                   abap_system_timezone( $session.client,'NULL' ),
+                   $session.client,
+                   'NULL' ), 'FAIL' ), 3600, 2 )
+         else 0.00
+       end                                                                                                                                       as MaintOrdBasicDifferenceInHours,
+
+       /* Associations */
+       _afko,
+       _Equipment,
+       _EquipmentText,
+       _ZTF_PM_Maint_Order_Status
+}

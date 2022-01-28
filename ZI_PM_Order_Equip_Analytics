@@ -1,0 +1,32 @@
+@AbapCatalog.sqlViewName: 'ZIPMMAINTORDAN'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Maintenance Order Equipment - Analytics'
+
+@Analytics.dataCategory: #DIMENSION
+@VDM.viewType: #BASIC
+define view ZI_PM_Order_Equip_Analytics
+  as select from equi
+  association [0..1] to I_TechnicalObjectType as _TechnicalObjectType on _TechnicalObjectType.TechnicalObjectType = $projection.TechnicalObjectType
+  association [0..*] to I_EquipmentText       as _EquipmentText       on $projection.Equipment = _EquipmentText.Equipment
+{
+
+      @ObjectModel.text.association: '_EquipmentText'
+  key equi.equnr                                                            as Equipment,
+      _EquipmentText[1: Language = $session.system_language ].EquipmentName as EquipmentDescription,
+
+      @Consumption.valueHelpDefinition: [
+        { entity:  { name:    'I_TechnicalObjectTypeStdVH',
+                     element: 'TechnicalObjectType' }
+        }]
+
+      @ObjectModel.foreignKey.association: '_TechnicalObjectType'
+      equi.eqart                                                            as TechnicalObjectType,
+
+      /* Associations */
+
+      _TechnicalObjectType,
+      _EquipmentText
+
+}

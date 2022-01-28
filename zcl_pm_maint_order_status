@@ -1,0 +1,64 @@
+CLASS zcl_pm_maint_order_status DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    INTERFACES if_amdp_marker_hdb .
+    CLASS-METHODS get_latest_status FOR TABLE FUNCTION ZTF_PM_MAINT_ORDER_STATUS.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS zcl_pm_maint_order_status IMPLEMENTATION.
+  METHOD get_latest_status BY DATABASE FUNCTION
+                           FOR HDB
+                           LANGUAGE SQLSCRIPT
+                           OPTIONS READ-ONLY
+                           USING jcds tj04.
+
+
+    rank_table =
+    select mandt    AS client,
+           objnr    AS objnr,
+           stat     AS stat,
+           udate    AS udate,
+           utime    AS utime,
+           RANK ( ) OVER ( PARTITION BY mandt, objnr
+                               ORDER BY udate desc, utime desc ) AS rank
+      FROM jcds
+      WHERE inact = '' and objnr LIKE 'OR%';
+
+      latest_status =    SELECT client,
+           objnr,
+           stat,
+           udate,
+           utime
+      FROM :rank_table
+     WHERE rank = 1;
+
+     maint_status = SELECT client,
+           objnr,
+           stat,
+           udate,
+           utime,
+           RANK ( ) OVER ( PARTITION BY  objnr
+                               ORDER BY statp desc, linep desc ) AS rank
+      FROM :latest_status
+      inner join tj04 on  tj04.istat = stat and tj04.OBTYP = 'ORI';
+
+    RETURN
+    SELECT client,
+           objnr,
+           stat,
+           udate,
+           utime
+      FROM :maint_status
+     WHERE rank = 1;
+  ENDMETHOD.
+
+
+ENDCLASS.

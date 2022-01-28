@@ -1,0 +1,86 @@
+@AbapCatalog.sqlViewName: 'ZIPMMAINTORERDAN'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'CDS View for Maint. Order - Analytics'
+
+@Analytics.dataCategory: #DIMENSION
+@VDM.viewType: #BASIC
+define view ZI_PM_Maint_Order_Analytics
+  as select from qmel
+  association [0..1] to ZI_PM_Order_Details_Analytics as _ZI_PM_Order_Details_Analytics on $projection.MaintenanceOrder = _ZI_PM_Order_Details_Analytics.OrderNmbr
+
+{
+  key qmnum                                                                                                                   as MaintenanceNotification,
+      aufnr                                                                                                                   as MaintenanceOrder,
+      qmart                                                                                                                   as NotificationType,
+      qmtxt                                                                                                                   as NotificationText,
+      --Required Date
+      strmn                                                                                                                   as RequiredStartDate,
+      strur                                                                                                                   as RequiredStartTime,
+      ltrmn                                                                                                                   as RequiredEndDate,
+      ltrur                                                                                                                   as RequiredEndTime,
+
+      CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(strmn, 7, 2), '/' ) , CONCAT(substring(strmn, 5, 2) , '/')), substring(strmn, 1, 4)),
+      CONCAT(CONCAT(Concat(substring(strur, 1, 2), ':' ) , CONCAT(substring(strur, 3, 2) , ':')), substring(strur, 5, 2)), 1) as ReqStartDateTime,
+
+      CONCAT_WITH_SPACE(CONCAT(CONCAT(Concat(substring(ltrmn, 7, 2), '/' ) , CONCAT(substring(ltrmn, 5, 2) , '/')), substring(ltrmn, 1, 4)),
+      CONCAT(CONCAT(Concat(substring(ltrur, 1, 2), ':' ) , CONCAT(substring(ltrur, 3, 2) , ':')), substring(ltrur, 5, 2)), 1) as ReqEndDateTime,
+
+      case
+        when ( strmn != '00000000' and strur != '000000' )  and
+             ( ltrmn != '00000000' and ltrur != '000000' )
+          then
+           CONCAT(CONCAT(cast(cast(DIV(tstmp_seconds_between( dats_tims_to_tstmp( strmn, strur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( ltrmn, ltrur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ), 3600 ) as abap.int8 ) as abap.char(25)), ':' )          ,
+
+           CONCAT(CONCAT(LPAD(cast(DIV(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( strmn, strur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( ltrmn, ltrur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0'), ':' ) ,
+
+           LPAD(cast(MOD(MOD(CEIL(tstmp_seconds_between( dats_tims_to_tstmp( strmn, strur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ),  dats_tims_to_tstmp( ltrmn, ltrur ,
+           abap_system_timezone( $session.client,'NULL' ),
+           $session.client,
+           'NULL' ), 'FAIL' ) ), 3600 ), 60)  as abap.char(25)), 2, '0')))
+        else 'N/A'
+      end                                                                                                                     as ReqDifference,
+
+      case
+        when ( strmn != '00000000' and strur != '000000' ) and
+             ( ltrmn != '00000000' and ltrur != '000000' )
+           then
+              cast(division(tstmp_seconds_between( dats_tims_to_tstmp( strmn, strur,
+                  abap_system_timezone( $session.client,'NULL' ),
+                  $session.client,
+                 'NULL' ),  dats_tims_to_tstmp( ltrmn, ltrur ,
+                  abap_system_timezone( $session.client,'NULL' ),
+                  $session.client,
+                 'NULL' ), 'FAIL' ), 3600, 2) as abap.int8 )
+        else 0.00
+      end                                                                                                                     as ReqDifferenceInHours,
+      _ZI_PM_Order_Details_Analytics.OrdStatus                                                                                as OrderStatus,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicStartDate                                                                   as MaintOrdBasicStartDate,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicStartTime                                                                   as MaintOrdBasicStartTime,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicEndDate                                                                     as MaintOrdBasicEndDate,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicEndTime                                                                     as MaintOrdBasicEndTime,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicStartDateTime                                                               as MaintOrdBasicStartDateTime,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicEndtDateTime                                                                as MaintOrdBasicEndtDateTime,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicDifference                                                                  as MaintOrdBasicDifference,
+      _ZI_PM_Order_Details_Analytics.MaintOrdBasicDifferenceInHours                                                           as MaintOrdBasicDifferenceInHours,
+
+
+      /* Associations */
+      _ZI_PM_Order_Details_Analytics
+}
